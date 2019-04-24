@@ -10,7 +10,8 @@ export default class Board extends Component{
     this.state = {
         roomsList: [],
         currentRoom: '',
-        currentRoomId: ''
+        currentRoomId: '',
+        currentUsers: ["Abby"]
     }
   }
 
@@ -30,10 +31,26 @@ export default class Board extends Component{
   handleChange(elem){
       this.setState({currentRoom: elem})
       console.log(this.state.currentRoom)
+      axios.get('http://localhost:8080/api/rooms/')
+      .then( response => {
+          console.log(response.data)
+          response.data.map((elem, i, arr) => {
+              if(this.state.currentRoom === elem.name){
+                this.setState({currentRoomId: elem.id})
+              }
+          })
+          console.log(this.state.currentRoomId);
+      } )
+      axios.get(`http://localhost:8080/api/rooms/${this.state.currentRoomId}`)
+      .then( response => {
+          console.log(response.data.users)
+              this.setState({currentUsers: response.data.users})
+          })
+          console.log(this.state.currentUsers)
   }
   render(props){
     const {title} = this.props;
-    const {roomsList, currentRoom} = this.state;
+    const {roomsList, currentRoom, currentRoomId, currentUsers} = this.state;
 
     return(
         <div style = {{display: "flex", flexDirection: "row", backgroundColor: "white", color: "white"}}>
@@ -45,7 +62,7 @@ export default class Board extends Component{
             })}
             </div>
             <div style = {{display: "flex", flexDirection: "column"}}>
-               <div> <ChatHeader headerTitle= {this.state.currentRoom}/></div>
+               <div> <ChatHeader headerTitle= {currentRoom} currentRoomId= {currentRoomId} currentUsers={currentUsers}/></div>
                <div> <Messaging /></div>
             </div>
         </div>

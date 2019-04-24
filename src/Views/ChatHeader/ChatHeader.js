@@ -7,28 +7,32 @@ export default class ChatHeader extends Component{
     this.state = {
         roomsList: [],
         currentRoom: '',
-        roomID: this.props.id
+        currentRoomId: this.props.currentRoomId,
+        currentUsers: this.props.currentUsers
     }
   }
-  componentDidMount(){
-    axios.get(`http://localhost:8080/api/rooms/${this.props.id}`)
-    .then( response => {
-        console.log(response.data)
-        const roomNames = []
-        response.data.map((elem, i, arr) => {
-          roomNames.push(elem.name)
-        })
-        console.log(roomNames)
-      this.setState({roomsList: roomNames})
-    } )
-}
+//   componentDidMount(props){
+//     // axios.get(`http://localhost:8080/api/rooms/${this.props.currentRoomId}`)
+//     // .then( response => {
+//     //     console.log(response.data.users)
+//     //         this.setState({currentUsers: response.data.users})
+//     //     })
+//     //     console.log(this.state.currentUsers)
+// }
 
   render(props){
     const {title, headerTitle} = this.props;
+    const {currentUsers} = this.state;
 
     return(
         <div style= {{color: "black"}}>
+        
            {this.props.headerTitle}
+           
+           {currentUsers.map(
+               (elem, i) => {
+                return <ul key ={i}>{elem}</ul>
+           })}
         </div>
     )
   }
